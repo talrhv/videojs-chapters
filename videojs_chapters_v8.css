@@ -1,0 +1,130 @@
+/* Video.js Chapters Plugin CSS Styles */
+
+/* Base container styles */
+.vjs-viostream-chaptering-container {
+  position: relative;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* Hide utility class */
+.v-hide {
+  display: none !important;
+}
+
+/* Chapter icon styles */
+.vjs-viostream-chapters-icon {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 16px;
+  height: 16px;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 10;
+}
+
+/* Dropdown styles */
+.vjs-viostream-chaptering-container-dropdown {
+  padding: 8px;
+  border: 1px solid #333;
+}
+
+.vjs-viostream-chaptering-dropdown {
+  width: 100%;
+  padding: 8px 12px;
+  padding-left: 32px; /* Space for icon */
+  background-color: inherit;
+  color: inherit;
+  border: 1px solid #444;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+
+.vjs-viostream-chaptering-dropdown:focus {
+  border-color: #0066cc;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.3);
+}
+
+.vjs-viostream-chaptering-dropdown option {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  padding: 8px;
+}
+
+/* Horizontal control styles */
+.vjs-viostream-chaptering-horizontal {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid #333;
+  min-height: 50px;
+}
+
+.vjs-viostream-outer-stage {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  margin: 0 8px;
+}
+
+.vjs-viostream-chapter-item-list {
+  display: flex;
+  position: relative;
+  transition: left 0.3s ease;
+  height: 100%;
+}
+
+.vjs-viostream-chapter-item {
+  flex-shrink: 0;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #444;
+  padding: 8px 12px;
+  margin-right: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+}
+
+.vjs-viostream-chapter-item:hover {
+  background-color: #272727;
+  color: #ffffff;
+  border-color: #555;
+}
+
+.vjs-viostream-chapter-item:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 1px;
+}
+
+.vjs-viostream-chapter-item:active {
+  background-color: #333;
+}
+
+.vjs-viostream-chapter-item.vjs-viostream-chapter-item-active {
+  background-color: #272727;
+  color: #ffffff;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 1px rgba(0, 102, 204, 0.5);
+}
+
+.vjs-viostream-chapter-item span {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis
