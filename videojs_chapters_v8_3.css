@@ -1,0 +1,302 @@
+/* Video.js Chapters Plugin CSS Styles */
+
+/* Base container styles */
+.vjs-viostream-chaptering-container {
+  position: relative;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  font-size: 16px; /* Increased from 14px */
+  box-sizing: border-box;
+}
+
+/* RTL support */
+.vjs-viostream-chaptering-container[dir="rtl"] {
+  direction: rtl;
+}
+
+.vjs-viostream-chaptering-container[dir="rtl"] .vjs-viostream-chapter-item {
+  text-align: right;
+}
+
+.vjs-viostream-chaptering-container[dir="rtl"] .vjs-viostream-chapters-icon {
+  left: auto;
+  right: 8px;
+}
+
+.vjs-viostream-chaptering-container[dir="rtl"] .vjs-viostream-chaptering-dropdown {
+  padding-left: 12px;
+  padding-right: 32px; /* Space for icon on the right */
+}
+
+/* Hide utility class */
+.v-hide {
+  display: none !important;
+}
+
+/* Chapter icon styles */
+.vjs-viostream-chapters-icon {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 16px;
+  height: 16px;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 10;
+}
+
+/* Progress bar markers */
+.vjs-viostream-marker {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background-color: #fff;
+  border: 2px solid #0066cc;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+  margin-left: -6px; /* Center the marker */
+}
+
+.vjs-viostream-marker:hover {
+  background-color: #0066cc;
+  border-color: #fff;
+  transform: translateY(-50%) scale(1.2);
+}
+
+.vjs-viostream-marker:active {
+  transform: translateY(-50%) scale(0.9);
+}
+
+/* Tooltip for markers */
+.vjs-viostream-marker .tooltiptext {
+  visibility: hidden;
+  width: auto;
+  min-width: 120px;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 6px 10px;
+  position: absolute;
+  z-index: 1000;
+  bottom: 125%;
+  left: 0; /* Changed from 50% to 0 to align left */
+  transform: translateX(0); /* Removed centering transform */
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 14px; /* Increased from 12px */
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.vjs-viostream-marker .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 15px; /* Changed from 50% to 15px to position arrow on left side */
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
+}
+
+.vjs-viostream-marker:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Dropdown styles */
+.vjs-viostream-chaptering-container-dropdown {
+  padding: 8px;
+  border: 1px solid #333;
+}
+
+.vjs-viostream-chaptering-dropdown {
+  width: 100%;
+  padding: 8px 12px;
+  padding-left: 32px; /* Space for icon */
+  background-color: inherit;
+  color: inherit;
+  border: 1px solid #444;
+  border-radius: 4px;
+  font-size: 16px; /* Increased from 14px */
+  outline: none;
+  cursor: pointer;
+}
+
+.vjs-viostream-chaptering-dropdown:focus {
+  border-color: #0066cc;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.3);
+}
+
+.vjs-viostream-chaptering-dropdown option {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  padding: 8px;
+  font-size: 16px; /* Increased from default */
+}
+
+/* Horizontal control styles */
+.vjs-viostream-chaptering-horizontal {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid #333;
+  min-height: 60px; /* Increased from 50px */
+}
+
+.vjs-viostream-outer-stage {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  margin: 0 8px;
+}
+
+.vjs-viostream-chapter-item-list {
+  display: flex;
+  position: relative;
+  transition: left 0.3s ease;
+  height: 100%;
+}
+
+.vjs-viostream-chapter-item {
+  flex-shrink: 0;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #444;
+  padding: 10px 14px; /* Increased padding */
+  margin-right: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 16px; /* Increased from 13px */
+  line-height: 1.4;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-height: 40px; /* Increased from 34px */
+  display: flex;
+  align-items: center;
+}
+
+.vjs-viostream-chapter-item:hover {
+  background-color: #272727;
+  color: #ffffff;
+  border-color: #555;
+}
+
+.vjs-viostream-chapter-item:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 1px;
+}
+
+.vjs-viostream-chapter-item:active {
+  background-color: #333;
+}
+
+.vjs-viostream-chapter-item.vjs-viostream-chapter-item-active {
+  background-color: #272727;
+  color: #ffffff;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 1px rgba(0, 102, 204, 0.5);
+}
+
+.vjs-viostream-chapter-item span {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 16px; /* Increased font size */
+  font-weight: 500; /* Made text slightly bolder */
+}
+
+/* Arrow button styles */
+.vjs-viostream-chaptering-arrow-button {
+  background-color: #1a1a1a;
+  border: 1px solid #444;
+  color: #ffffff;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vjs-viostream-chaptering-arrow-button:hover {
+  background-color: #272727;
+  border-color: #555;
+}
+
+.vjs-viostream-chaptering-arrow-button:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 1px;
+}
+
+.vjs-viostream-chaptering-arrow-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.vjs-viostream-chaptering-arrow-button-icon {
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.vjs-viostream-chaptering-arrow-button-left-sign {
+  border-width: 6px 10px 6px 0;
+  border-color: transparent #ffffff transparent transparent;
+}
+
+.vjs-viostream-chaptering-arrow-button-right-sign {
+  border-width: 6px 0 6px 10px;
+  border-color: transparent transparent transparent #ffffff;
+}
+
+.vjs-viostream-chaptering-arrow-button:hover .vjs-viostream-chaptering-arrow-button-left-sign {
+  border-right-color: #ffffff;
+}
+
+.vjs-viostream-chaptering-arrow-button:hover .vjs-viostream-chaptering-arrow-button-right-sign {
+  border-left-color: #ffffff;
+}
+
+/* No scroll state */
+.vjs-viostream-chaptering-noscroll .vjs-viostream-chaptering-arrow-button {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .vjs-viostream-chaptering-container {
+    font-size: 14px;
+  }
+  
+  .vjs-viostream-chapter-item {
+    font-size: 14px;
+    padding: 8px 10px;
+    min-height: 36px;
+  }
+  
+  .vjs-viostream-chapter-item span {
+    font-size: 14px;
+  }
+  
+  .vjs-viostream-chaptering-dropdown {
+    font-size: 14px;
+  }
+  
+  .vjs-viostream-marker .tooltiptext {
+    font-size: 12px;
+  }
+}
