@@ -55,7 +55,7 @@
   width: 12px;
   height: 12px;
   background-color: #fff;
-  border: 2px solid #0066cc;
+  border: 2px solid var(--primary-color);
   border-radius: 50%;
   cursor: pointer;
   z-index: 10;
@@ -64,7 +64,7 @@
 }
 
 .vjs-viostream-marker:hover {
-  background-color: #0066cc;
+  background-color: var(--primary-hover);
   border-color: #fff;
   transform: translateY(-50%) scale(1.2);
 }
