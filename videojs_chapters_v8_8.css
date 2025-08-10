@@ -60,7 +60,6 @@
   cursor: pointer;
   z-index: 10;
   transition: all 0.2s ease;
-  margin-left: -6px; /* Center the marker */
 }
 
 .vjs-viostream-marker:hover {
