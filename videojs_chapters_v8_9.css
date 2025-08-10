@@ -98,8 +98,6 @@
   content: "";
   position: absolute;
   top: 100%;
-  left: 15px; /* Changed from 50% to 15px to position arrow on left side */
-  margin-left: -5px;
   border-width: 5px;
   border-style: solid;
   border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
