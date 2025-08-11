@@ -550,96 +550,7 @@
         spanToolTip.innerHTML = chapters[i].label;
         elem.appendChild(spanToolTip);
         playheadWell.appendChild(elem);
-        
-        // Add enhanced tooltip functionality for 2-row controls
-        ChapterMarkersProgressBarControl.setupTooltip(elem, player);
       }
-    }
-    
-    // New method to handle tooltip positioning for 2-row controls
-    static setupTooltip(marker, player) {
-      const tooltip = marker.querySelector('.tooltiptext');
-      if (!tooltip) return;
-      
-      let isShowing = false;
-      
-      function showTooltip(e) {
-        isShowing = true;
-        tooltip.style.visibility = 'visible';
-        tooltip.style.opacity = '1';
-        positionTooltip(e);
-      }
-      
-      function hideTooltip() {
-        isShowing = false;
-        setTimeout(() => {
-          if (!isShowing) {
-            tooltip.style.visibility = 'hidden';
-            tooltip.style.opacity = '0';
-          }
-        }, 100);
-      }
-      
-      function positionTooltip(e) {
-        if (!isShowing) return;
-        
-        const markerRect = marker.getBoundingClientRect();
-        const playerEl = player.el();
-        const has2RowControls = playerEl.classList.contains('vjs-has-2row-controls');
-        
-        // Calculate position
-        const markerCenterX = markerRect.left + markerRect.width / 2;
-        const tooltipWidth = tooltip.offsetWidth || 120;
-        
-        // Position tooltip
-        if (has2RowControls) {
-          // For 2-row controls, position relative to the marker
-          tooltip.style.position = 'absolute';
-          tooltip.style.left = '50%';
-          tooltip.style.transform = 'translateX(-50%)';
-          tooltip.style.bottom = 'calc(100% + 12px)';
-          tooltip.style.zIndex = '999999';
-        } else {
-          // For default controls, use fixed positioning
-          tooltip.style.position = 'fixed';
-          tooltip.style.left = Math.max(5, Math.min(markerCenterX - tooltipWidth / 2, window.innerWidth - tooltipWidth - 5)) + 'px';
-          tooltip.style.top = (markerRect.top - 40) + 'px';
-          tooltip.style.transform = 'none';
-          tooltip.style.zIndex = '999999';
-        }
-      }
-      
-      // Remove any existing listeners
-      marker.removeEventListener('mouseenter', marker._showTooltip);
-      marker.removeEventListener('mouseleave', marker._hideTooltip);
-      marker.removeEventListener('mousemove', marker._positionTooltip);
-      
-      // Store references to the functions
-      marker._showTooltip = showTooltip;
-      marker._hideTooltip = hideTooltip;
-      marker._positionTooltip = positionTooltip;
-      
-      // Add event listeners
-      marker.addEventListener('mouseenter', showTooltip);
-      marker.addEventListener('mouseleave', hideTooltip);
-      marker.addEventListener('mousemove', positionTooltip);
-      
-      // Handle window resize
-      const resizeHandler = () => {
-        if (isShowing) {
-          positionTooltip();
-        }
-      };
-      
-      window.addEventListener('resize', resizeHandler);
-      
-      // Clean up on player disposal
-      player.one('dispose', () => {
-        window.removeEventListener('resize', resizeHandler);
-        marker.removeEventListener('mouseenter', showTooltip);
-        marker.removeEventListener('mouseleave', hideTooltip);
-        marker.removeEventListener('mousemove', positionTooltip);
-      });
     }
   }
 
@@ -656,38 +567,93 @@
     constructor(player, options) {
       super(player);
       this.options = videojs.obj.merge(defaults, options);
+      this.player = player;
 
       this.player.ready(() => {
         this.player.addClass('vjs-captions-menu');
       });
+    }
 
-      this.player.one('loadedmetadata', () => {
-        if (options.chapterType === undefined || options.chapters === undefined) {
-          return;
+    /**
+     * Initialize chapters manually
+     * @param {Object} options - Chapter options including chapterType and chapters
+     */
+    initializeChapters(options = {}) {
+      // Merge with existing options
+      const finalOptions = videojs.obj.merge(this.options, options);
+      
+      if (finalOptions.chapterType === undefined || finalOptions.chapters === undefined) {
+        return;
+      }
+
+      if (finalOptions.chapters.length < 1) {
+        return;
+      }
+
+      switch (finalOptions.chapterType.toLowerCase()) {
+        case 'dropdown':
+          this.player.chapterDropdownControl = new ChapterDropdownControl(this.player, finalOptions);
+          break;
+
+        case 'native':
+        case 'progressbar':
+          this.player.chapterMarkersProgressBarControl = new ChapterMarkersProgressBarControl(this.player, finalOptions);
+          break;
+
+        case 'classic':
+        case 'classicsmall':
+        case 'horizontal':
+        default:
+          this.player.ChapterHorizontalControl = new ChapterHorizontalControl(this.player, finalOptions);
+          break;
+      }
+    }
+
+    /**
+     * Get the current chapter control instance
+     * @returns {Object|null} The chapter control instance
+     */
+    getChapterControl() {
+      return this.player.chapterDropdownControl || 
+             this.player.chapterMarkersProgressBarControl || 
+             this.player.ChapterHorizontalControl || 
+             null;
+    }
+
+    /**
+     * Remove all chapter controls
+     */
+    removeChapters() {
+      // Remove dropdown control
+      if (this.player.chapterDropdownControl) {
+        const dropdownContainer = document.querySelector(`#${this.player.id()}-vjs-viostream-chaptering-container`);
+        if (dropdownContainer) {
+          dropdownContainer.remove();
         }
+        this.player.chapterDropdownControl = null;
+      }
 
-        if (options.chapters.length < 1) {
-          return;
+      // Remove horizontal control
+      if (this.player.ChapterHorizontalControl) {
+        const horizontalContainer = document.querySelector(`#${this.player.id()}-vjs-viostream-chaptering-container`);
+        if (horizontalContainer) {
+          horizontalContainer.remove();
         }
+        this.player.ChapterHorizontalControl = null;
+      }
 
-        switch (options.chapterType.toLowerCase()) {
-          case 'dropdown':
-            player.chapterDropdownControl = new ChapterDropdownControl(player, options);
-            break;
+      // Remove progress bar markers
+      if (this.player.chapterMarkersProgressBarControl) {
+        const markers = this.player.el().querySelectorAll('.vjs-viostream-marker');
+        markers.forEach(marker => marker.remove());
+        this.player.chapterMarkersProgressBarControl = null;
+      }
 
-          case 'native':
-          case 'progressbar':
-            player.chapterMarkersProgressBarControl = new ChapterMarkersProgressBarControl(player, options);
-            break;
-
-          case 'classic':
-          case 'classicsmall':
-          case 'horizontal':
-          default:
-            player.ChapterHorizontalControl = new ChapterHorizontalControl(player, options);
-            break;
-        }
-      });
+      // Remove styles
+      const styleElement = document.querySelector(`#${this.player.id()}-vjs-viostream-chaptering-container-styles`);
+      if (styleElement) {
+        styleElement.remove();
+      }
     }
   }
 
