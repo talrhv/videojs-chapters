@@ -44,8 +44,7 @@
   const Component = videojs.getComponent('Component');
 
   /**
-   * The class for chapter dropdown list
-   * @extends Component
+   * Chapter dropdown
    */
   class ChapterDropdownControl extends Component {
     constructor(player, options) {
@@ -54,15 +53,10 @@
       const playerContainer = player.el();
       this.cssRules = [];
       this.settings = {
-        skin: {
-          background: '#1a1a1a',
-          color: '#ffffff'
-        }
+        skin: { background: '#1a1a1a', color: '#ffffff' }
       };
 
-      if (options.styles) {
-        this.settings.skin = options.styles;
-      }
+      if (options.styles) this.settings.skin = options.styles;
 
       this.containerId = player.id() + "-vjs-viostream-chaptering-container";
       this.generateStyles();
@@ -72,13 +66,8 @@
       chapteringContainer.className = 'vjs-viostream-chaptering-container vjs-viostream-chaptering-container-dropdown';
       chapteringContainer.setAttribute('data-chapter-mode', 'dropdown');
 
-      // Set direction based on language
       const isRTL = options.language === 'he' || options.language === 'ar';
-      if (isRTL) {
-        chapteringContainer.setAttribute('dir', 'rtl');
-      } else {
-        chapteringContainer.setAttribute('dir', 'ltr');
-      }
+      chapteringContainer.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
 
       ChapterIcon(chapteringContainer);
 
@@ -89,17 +78,11 @@
       playerContainer.parentNode.insertBefore(chapteringContainer, playerContainer.nextSibling);
 
       const chapterTimeArray = [];
-
-      if (options.chapters === undefined) {
-        options.chapters = [];
-      }
-
+      if (options.chapters === undefined) options.chapters = [];
       const videoDuration = player.duration();
 
       for (let j = 0; j < options.chapters.length; j++) {
-        if (options.chapters[j].time < 0 || options.chapters[j].time > videoDuration) {
-          continue;
-        }
+        if (options.chapters[j].time < 0 || options.chapters[j].time > videoDuration) continue;
 
         chapterTimeArray.push(options.chapters[j].time);
         const option = document.createElement('option');
@@ -136,10 +119,7 @@
     static onChapterProgressForDropdown(player, chapterSelectList, chapterTimeArray) {
       player.on('timeupdate', function() {
         const seconds = this.currentTime();
-
-        if (chapterTimeArray.length === 0 || seconds < chapterTimeArray[0]) {
-          return;
-        }
+        if (chapterTimeArray.length === 0 || seconds < chapterTimeArray[0]) return;
 
         for (let c = chapterTimeArray.length; c > 0; c--) {
           if (seconds >= chapterTimeArray[c - 1]) {
@@ -152,12 +132,10 @@
       });
     }
   }
-
   videojs.registerComponent('ChapterDropdownControl', ChapterDropdownControl);
 
   /**
-   * The class for chapter horizontal control
-   * @extends Component
+   * Chapter horizontal
    */
   class ChapterHorizontalControl extends Component {
     constructor(player, options) {
@@ -172,10 +150,7 @@
           colorActive: '#fff'
         }
       };
-
-      if (options.styles) {
-        this.settings.skin = options.styles;
-      }
+      if (options.styles) this.settings.skin = options.styles;
 
       this.containerId = player.id() + "-vjs-viostream-chaptering-container";
       this.generateStyles();
@@ -185,13 +160,8 @@
       chapteringContainer.className = 'vjs-viostream-chaptering-container v-hide vjs-viostream-chaptering-horizontal';
       chapteringContainer.setAttribute('data-chapter-mode', 'horizontal');
 
-      // Set direction based on language
       const isRTL = options.language === 'he' || options.language === 'ar';
-      if (isRTL) {
-        chapteringContainer.setAttribute('dir', 'rtl');
-      } else {
-        chapteringContainer.setAttribute('dir', 'ltr');
-      }
+      chapteringContainer.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
 
       ChapterIcon(chapteringContainer);
 
@@ -220,7 +190,6 @@
         ChapterHorizontalControl.scrollLeft(chapteringItemList);
         return false;
       };
-
       rightArrowButton.onclick = function() {
         rightArrowButton.focus();
         ChapterHorizontalControl.scrollRight(chapteringItemList);
@@ -235,9 +204,7 @@
       chapteringContainer.appendChild(chapteringOuterStageContainer);
       playerContainer.parentNode.insertBefore(chapteringContainer, playerContainer.nextSibling);
 
-      if (options.chapters === undefined) {
-        options.chapters = [];
-      }
+      if (options.chapters === undefined) options.chapters = [];
 
       player.ready(() => {
         ChapterHorizontalControl.addChapters(player, options.chapters);
@@ -262,17 +229,12 @@
       StyleManager.WriteStyles(this.containerId, cssRules);
     }
 
-    static minChapterItemWidth() {
-      return 220;
-    }
+    static minChapterItemWidth() { return 220; }
 
     static addChapters(player, chapters) {
       const containerId = player.id() + "-vjs-viostream-chaptering-container";
       const chapterContainer = document.querySelector("#" + containerId);
-
-      if (chapterContainer === null) {
-        return;
-      }
+      if (chapterContainer === null) return;
 
       const chapterTimeArray = [];
       const chapteringItemList = chapterContainer.querySelector('.vjs-viostream-chapter-item-list');
@@ -284,10 +246,7 @@
 
       const containerWidth = player.currentWidth();
       let chapterDisplayNumber = Math.floor(containerWidth / ChapterHorizontalControl.minChapterItemWidth());
-
-      if (chapterDisplayNumber < 1) {
-        chapterDisplayNumber = 1;
-      }
+      if (chapterDisplayNumber < 1) chapterDisplayNumber = 1;
 
       chapteringItemList.style.left = '0px';
       chapteringItemList.setAttribute('data-chapter-item-display', chapterDisplayNumber);
@@ -301,9 +260,7 @@
       const videoDuration = player.duration();
 
       for (let i = 0; i < chapters.length; i++) {
-        if (chapters[i].time < 0 || chapters[i].time > videoDuration) {
-          continue;
-        }
+        if (chapters[i].time < 0 || chapters[i].time > videoDuration) continue;
 
         chapterTimeArray.push(chapters[i].time);
         const ariaLabelText = chapters[i].label.replace(/\"/ig, '&quot;');
@@ -369,9 +326,7 @@
     }
 
     static scrollChapterItemList(chapterItem, chapteringItemList) {
-      if (chapterItem === null || ChapterHorizontalControl.hasClass(chapteringItemList.parentNode.parentNode, 'vjs-viostream-chaptering-noscroll')) {
-        return;
-      }
+      if (chapterItem === null || ChapterHorizontalControl.hasClass(chapteringItemList.parentNode.parentNode, 'vjs-viostream-chaptering-noscroll')) return;
 
       const newStepIndex = parseInt(chapterItem.getAttribute('data-chapter-index'), 10) - 1;
       const newLeftOffset = chapterItem.clientWidth * -newStepIndex;
@@ -386,10 +341,7 @@
 
     static selectChapterEvent(player, event, chapterContainer) {
       let target = event.target;
-
-      if (event.target.tagName === 'SPAN') {
-        target = event.target.parentElement;
-      }
+      if (event.target.tagName === 'SPAN') target = event.target.parentElement;
 
       const time = target.getAttribute('data-time');
       player.currentTime(time);
@@ -428,10 +380,7 @@
       chapteringItemList.style.width = null;
       const innerWidth = chapteringItemList.parentNode.offsetWidth;
       let chapterDisplayNumber = Math.floor(chapterContainer.clientWidth / ChapterHorizontalControl.minChapterItemWidth());
-
-      if (chapterDisplayNumber === 0) {
-        chapterDisplayNumber = 1;
-      }
+      if (chapterDisplayNumber === 0) chapterDisplayNumber = 1;
 
       chapteringItemList.setAttribute('data-chapter-item-display', chapterDisplayNumber);
       const chapterItemWidth = Math.floor(innerWidth / chapterDisplayNumber);
@@ -468,36 +417,24 @@
     }
 
     static addClass(elem, cls) {
-      if (elem.className.indexOf(cls) > -1) {
-        return;
-      }
+      if (elem.className.indexOf(cls) > -1) return;
       elem.className = (elem.className + ' ' + cls).trim();
     }
-
     static removeClass(elem, cls) {
-      if (elem.className.indexOf(cls) === -1) {
-        return;
-      }
+      if (elem.className.indexOf(cls) === -1) return;
       elem.className = elem.className.replace(cls, '').replace(/\s+/g, ' ');
     }
-
-    static hasClass(elem, cls) {
-      return elem.className.indexOf(cls) !== -1;
-    }
+    static hasClass(elem, cls) { return elem.className.indexOf(cls) !== -1; }
   }
-
   videojs.registerComponent('ChapterHorizontalControl', ChapterHorizontalControl);
 
   /**
-   * The class for chapter markers
+   * Chapter markers on progress bar
    */
   class ChapterMarkersProgressBarControl extends Component {
     constructor(player, options) {
       super(player, options);
-
-      if (options.chapters === undefined) {
-        options.chapters = [];
-      }
+      if (options.chapters === undefined) options.chapters = [];
 
       player.ready(() => {
         ChapterMarkersProgressBarControl.addMarkers(options.chapters, player, options);
@@ -510,13 +447,10 @@
       const playerContainer = player.el();
       const playheadWell = playerContainer.getElementsByClassName('vjs-progress-holder')[0];
 
-      // Check if language is RTL
       const isRTL = options.language === 'he' || options.language === 'ar';
 
       for (let i = 0; i < iMax; i++) {
-        if (chapters[i].time < 0 || chapters[i].time > videoDuration) {
-          continue;
-        }
+        if (chapters[i].time < 0 || chapters[i].time > videoDuration) continue;
 
         const elem = document.createElement('div');
         elem.className = 'vjs-viostream-marker';
@@ -526,12 +460,8 @@
         elem.setAttribute('data-time', chapters[i].time);
         elem.style.cursor = 'pointer';
 
-        // Set RTL direction if language is Hebrew or Arabic
-        if (isRTL) {
-          elem.setAttribute('dir', 'rtl');
-        }
+        if (isRTL) elem.setAttribute('dir', 'rtl');
 
-        // Add click handler to marker
         elem.onclick = function(e) {
           e.preventDefault();
           e.stopPropagation();
@@ -548,117 +478,130 @@
       }
     }
   }
-
   videojs.registerComponent('ChapterMarkersProgressBarControl', ChapterMarkersProgressBarControl);
 
-  // Get Plugin class from Video.js 8
+  // Plugin
   const Plugin = videojs.getPlugin('plugin');
   const defaults = {};
 
-  /**
-   * Idempotent Chapters plugin for Video.js 8
-   * - מאזין תמיד ל-loadedmetadata (on), לא one
-   * - מנקה רנדר קודם לפני יצירה מחדש
-   * - לא צובר מאזינים בין קריאות חוזרות ל-plugin
-   * - אם קוראים שוב player.chapters(options) הוא יעדכן this.options ויפעל בסבב metadata הבא
-   */
   class Chapters extends Plugin {
     constructor(player, options) {
       super(player);
 
-      // מזג/עדכן אופציות; אם נקרא שוב, נשמור את האחרונות
       this.options = videojs.obj.merge({}, defaults);
-      if (options) {
-        this.options = videojs.obj.merge(this.options, options);
-      }
+      if (options) this.options = videojs.obj.merge(this.options, options);
 
       this.player.ready(() => {
         this.player.addClass('vjs-captions-menu');
       });
 
-      // מנגנון מניעת דאבל-מאזין אפילו אם נוצרת אינסטנציה נוספת בטעות
+      // נוודא שאין דאבל-מאזינים מקודמים
       if (this.player._viostreamChaptersOnMeta) {
         this.player.off('loadedmetadata', this.player._viostreamChaptersOnMeta);
       }
+      if (this.player._viostreamChaptersOnData) {
+        this.player.off('loadeddata', this.player._viostreamChaptersOnData);
+      }
 
-      this._onLoadedMeta = () => {
-        const opts = this.options || {};
-        const chapters = opts.chapters || [];
+      this._onLoadedMeta = () => this._renderIfAny();
+      this._onLoadedData = () => this._renderIfAny(); // חלק מהדפדפנים יציבים יותר על loadeddata
 
-        // נקה יצירה קודמת (קומפוננטים/DOM/מרקרים)
-        this._teardownRendered();
-
-        if (!opts.chapterType || chapters.length < 1) {
-          return;
-        }
-
-        switch ((opts.chapterType || '').toLowerCase()) {
-          case 'dropdown':
-            this.player.chapterDropdownControl = new ChapterDropdownControl(this.player, opts);
-            break;
-
-          case 'native':
-          case 'progressbar':
-            this.player.chapterMarkersProgressBarControl = new ChapterMarkersProgressBarControl(this.player, opts);
-            break;
-
-          case 'classic':
-          case 'classicsmall':
-          case 'horizontal':
-          default:
-            this.player.ChapterHorizontalControl = new ChapterHorizontalControl(this.player, opts);
-            break;
-        }
-      };
-
-      // שמירה על המצביע גם על ה-player כדי למנוע דאבלים בין אינסטנציות
       this.player._viostreamChaptersOnMeta = this._onLoadedMeta;
+      this.player._viostreamChaptersOnData = this._onLoadedData;
 
-      // מאזין לכל source חדש
       this.player.on('loadedmetadata', this._onLoadedMeta);
+      this.player.on('loadeddata', this._onLoadedData);
 
-      // נקה מאזין בעת dispose הנגן
+      // ניקוי אוטומטי בעת dispose של הנגן
       this.player.one('dispose', () => {
-        try { this.player.off('loadedmetadata', this._onLoadedMeta); } catch(e) {}
-        if (this.player._viostreamChaptersOnMeta === this._onLoadedMeta) {
-          this.player._viostreamChaptersOnMeta = null;
-        }
-        this._teardownRendered();
+        try { this.dispose(); } catch(e) {}
       });
     }
 
     /**
-     * ניקוי יצירה קודמת כדי למנוע כפילויות ודליפות DOM
+     * עדכון אופציות בקריאה חוזרת ל-plugin (אם קוראים player.chapters({...}) שוב)
      */
+    updateOptions(nextOptions = {}) {
+      this.options = videojs.obj.merge({}, defaults);
+      this.options = videojs.obj.merge(this.options, nextOptions || {});
+      // לא מרנדר מיידית — יחכה ל־loadedmetadata/loadeddata הבא
+    }
+
+    _renderIfAny() {
+      const opts = this.options || {};
+      const chapters = opts.chapters || [];
+
+      // נקה קודם
+      this._teardownRendered();
+
+      if (!opts.chapterType || chapters.length < 1) return;
+
+      switch ((opts.chapterType || '').toLowerCase()) {
+        case 'dropdown':
+          this.player.chapterDropdownControl = new ChapterDropdownControl(this.player, opts);
+          break;
+        case 'native':
+        case 'progressbar':
+          this.player.chapterMarkersProgressBarControl = new ChapterMarkersProgressBarControl(this.player, opts);
+          break;
+        case 'classic':
+        case 'classicsmall':
+        case 'horizontal':
+        default:
+          this.player.ChapterHorizontalControl = new ChapterHorizontalControl(this.player, opts);
+          break;
+      }
+    }
+
     _teardownRendered() {
-      try {
-        // dispose לקומפוננטים אם קיימים
-        this.player.chapterDropdownControl?.dispose?.();
-        this.player.chapterDropdownControl = null;
+      try { this.player.chapterDropdownControl?.dispose?.(); } catch(e) {}
+      this.player.chapterDropdownControl = null;
 
-        this.player.chapterMarkersProgressBarControl?.dispose?.();
-        this.player.chapterMarkersProgressBarControl = null;
+      try { this.player.chapterMarkersProgressBarControl?.dispose?.(); } catch(e) {}
+      this.player.chapterMarkersProgressBarControl = null;
 
-        this.player.ChapterHorizontalControl?.dispose?.();
-        this.player.ChapterHorizontalControl = null;
-      } catch (e) {}
+      try { this.player.ChapterHorizontalControl?.dispose?.(); } catch(e) {}
+      this.player.ChapterHorizontalControl = null;
 
-      // הסרת קונטיינר חיצוני
+      // הסרת קונטיינר חיצוני (אם היה)
       const containerId = this.player.id() + "-vjs-viostream-chaptering-container";
-      try { document.getElementById(containerId)?.remove(); } catch (e) {}
+      try { document.getElementById(containerId)?.remove(); } catch(e) {}
 
-      // הסרת מרקרים מה-progress
+      // הסרת מרקרים
       try {
         const holder = this.player.el()?.querySelector('.vjs-progress-holder');
         holder?.querySelectorAll('.vjs-viostream-marker')?.forEach(el => el.remove());
-      } catch (e) {}
+      } catch(e) {}
+    }
+
+    /**
+     * Dispose מלא לפלאגין: מסיר מאזינים ומנקה DOM
+     */
+    dispose() {
+      // הסרת מאזינים
+      try {
+        if (this._onLoadedMeta) this.player.off('loadedmetadata', this._onLoadedMeta);
+        if (this._onLoadedData) this.player.off('loadeddata', this._onLoadedData);
+      } catch(e) {}
+
+      if (this.player._viostreamChaptersOnMeta === this._onLoadedMeta) {
+        this.player._viostreamChaptersOnMeta = null;
+      }
+      if (this.player._viostreamChaptersOnData === this._onLoadedData) {
+        this.player._viostreamChaptersOnData = null;
+      }
+
+      // ניקוי רנדר אחרון
+      this._teardownRendered();
+
+      // קריאה ל-super (לשחרור בסיסי של Plugin)
+      try { super.dispose && super.dispose(); } catch(e) {}
     }
   }
 
   Chapters.defaultState = {};
   Chapters.VERSION = version;
 
-  // Register the plugin with video.js 8
   videojs.registerPlugin('chapters', Chapters);
 
   return Chapters;
