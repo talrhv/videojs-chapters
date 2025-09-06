@@ -492,7 +492,7 @@
       if (options) this.options = videojs.obj.merge(this.options, options);
 
       this.player.ready(() => {
-        this.player.addClass('vjs-captions-menu');
+        // this.player.addClass('vjs-captions-menu');
       });
 
       // נוודא שאין דאבל-מאזינים מקודמים
